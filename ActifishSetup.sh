@@ -525,9 +525,9 @@ setupSSH(){
 
 function Install_GoPhish {
 	apt-get install unzip > /dev/null 2>&1
-	wget https://github.com/gophish/gophish/releases/download/v0.4.0/gophish-v0.4-linux-64bit.zip
-	unzip gophish-v0.4-linux-64bit.zip
-	cd gophish-v0.4-linux-64bit
+	wget https://github.com/gophish/gophish/releases/download/v0.6.0/gophish-v0.6.0-linux-64bit.zip
+	unzip gophish-v0.6.0-linux-64bit.zip
+	cd gophish-v0.6.0-linux-64bit
         sed -i 's/"listen_url" : "127.0.0.1:3333"/"listen_url" : "0.0.0.0:3333"/g' config.json
 	read -r -p "Do you want to add an SSL certificate to your GoPhish? [y/N] " response
 	case "$response" in
@@ -554,41 +554,26 @@ function Install_GoPhish {
 	esac
 }
 
-
-function Install_IRedMail {
-	echo "Downloading iRedMail"
-	wget https://bitbucket.org/zhb/iredmail/downloads/iRedMail-0.9.6.tar.bz2
-	tar -xvf iRedMail-0.9.6.tar.bz2
-	cd iRedMail-0.9.6/
-	chmod +x iRedMail.sh
-	echo "Running iRedMail Installer"
-	./iRedMail.sh
-}
-
 PS3="Server Setup Script - Pick an option: "
-options=("Setup SSH" "Debian Prep" "Ubuntu Prep" "Install SSL" "Install Mail Server" "Add Aliases" "Get DNS Entries" "Install GoPhish" "Install IRedMail")
+options=("Debian Prep" "Install SSL" "Install Mail Server" "Add Aliases" "Get DNS Entries" "Install GoPhish")
 select opt in "${options[@]}" "Quit"; do
 
     case "$REPLY" in
 
     #Prep
-    1) setupSSH;;
 
-		2) debian_initialize;;
+		1) debian_initialize;;
 
-		3) ubuntu_initialize;;
+		2) install_ssl_Cert;;
 
-		4) install_ssl_Cert;;
+		3) install_postfix_dovecot;;
 
-		5) install_postfix_dovecot;;
+		4) add_alias;;
 
-		6) add_alias;;
+		5) get_dns_entries;;
 
-		7) get_dns_entries;;
+		6) Install_GoPhish;;
 
-		8) Install_GoPhish;;
-
-		9) Install_IRedMail;;
 
     $(( ${#options[@]}+1 )) ) echo "Goodbye!"; break;;
     *) echo "Invalid option. Try another one.";continue;;
